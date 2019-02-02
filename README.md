@@ -34,9 +34,9 @@ The dataset contains transaction data from 01/12/2010 to 09/12/2011 for a UK-bas
 - Absolute Item Frequency Plot
 - Top 10 Relative Item Frequency Plot
 
-# Vizulatization 
+# Visualization 
 
-Some of the Vizualization Option:
+Some of the Visualization Option:
 - Scatter-Plot
 - The two-key plot
 - Graph-Based Visualizations
