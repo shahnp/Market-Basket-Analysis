@@ -16,14 +16,20 @@ A Marketer is interested in knowing what product is purchased with what product 
 - confidence lift and conviction
 
 # Measuring rule importance by using
-support and con dence.
-Support and con dence are the two criteria to help us decide whether a pattern is “interesting”. By setting thresholds for these two criteria, we can easily limit the number of interesting rules or item- sets reported.
+support and confidence.
+Support and confidence are the two criteria to help us decide whether a pattern is “interesting”. By setting thresholds for these two criteria, we can easily limit the number of interesting rules or item- sets reported.
 
 
 # Apriori & FP growth Algorithm.
 Mining association rules and frequent item sets allows for the discovery of interesting and useful connections or relationships between items.
 The objectives of the study are the following:
-Most of the Market Basket Analysis are done - to obtain association rules - analyze them for better decision support - better understanding of data association - increasing company pro t using the Apriori Algorithm and FP-Growth Algorithm - to analyze association rules based on relevance, interestingness, and correlation, - Use lift, Imbalance Ratio (IR), and Kulczynski (Kulc) measure as correlation measures.
+Most of the Market Basket Analysis are done 
+- to obtain association rules 
+- analyze them for better decision support 
+- better understanding of data association 
+- increasing company profit using the Apriori Algorithm and FP-Growth Algorithm 
+- to analyze association rules based on relevance, interestingness, and correlation, 
+- Use lift, Imbalance Ratio (IR), and Kulczynski (Kulc) measure as correlation measures.
 
 # Information about Datasets:
 Implementing MBA/Association Rule Mining using R
