@@ -1,0 +1,725 @@
+---
+title: "Market Basket Analysis"
+author: "Pankaj Shah"
+date: "1/31/2019"
+output: 
+  html_document:
+    highlight: tango
+    number_sections: yes
+    theme: spacelab
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+    fontsize: 12pt
+    mainfont: Arial
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+tags:
+- MBA
+- Apriori
+- Big Data
+- Predictive Analytics
+- Market Basket Analysis
+- Association Rule
+- Support
+- confidence
+- lift
+- Pankaj Shah
+- 
+subtitle: <h2><u> Apriori Association Rules </u></h2>
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
+![](https://raw.githubusercontent.com/shahnp/Market-Basket-Analysis/master/Neural_MBA.png){width=50%}
+
+# Problem: 
+
+*Purpose* : <br> 
+A Marketer is  interested in knowing what product is purchased with what product or if certain products are purchased together as a group of items which they can use to strategize on the cross selling activities.
+
+Steps we will take to tackle above problem.<br>
+
+- First, we listen through data and understand the concept.
+- Then, we learn the relationship between the variables.
+- then we lead by developing better algortithm.
+
+We know that nowadays, recommendation systems are highly based on machine learning methods that can learn the behavior, e.g., purchasing patterns, of data behaviors. 
+
+# Introduction
+
+Market basket analysis is the reasoning behind the art of arranging items in a store. Product placements should be done in such a way that the items frequently bought together are kept next to each other, so that customers are encouraged to buy them and so that this results in a boost in sales. If we love Shopping or have bought some products either online or anywhere we should have definetly heard about Market Basket Analysis term. When you go through McDonalds, Burger King, Taco Bell or any fast food chain they usually ask you if you would like to get french fries, sundae, or some other things that go well with the products you purchase. If you go for grocery shopping and bought milk and bread then you are more likely to buy eggs. When shopping online in Amazon, Walmart or any other retail store you couldn't have missed the screen that says people who have bought ABC have also bought product XYZ. All these is nothing but Market Basket way of selling more products to consumer and make their shopping experience more enjoyable adding more revenue to the company. So what is Market Basket Analysis truely based upon. How does Netflix knows What kind of Movies I would like. When two or more products are purchased, Market Basket Analysis is done to check whether the purchase of one product increases the likelihood of the purchase of other products. This knowledge is a tool for the marketers to bundle the products or strategize a product cross sell to a customer.
+
+Market Basket Analysis is a modelling technique based upon the theory that if you buy a certain group of items, you are more (or less) likely to buy another group of items. Market Basket Analysis is one of the key techniques used by large retailers to uncover associations between items.
+
+If you eager to know about the model or Algorithm behind the  Market Basket Analysis it is the APRIORI Algorithm. Below I will try to explain how retailers or any business personal help themself to boost their  business by predicting what items customers buy together by learning historical past data and predicting the future.
+
+Let me explain Couple of other terms that you are more likely to come across while going through my project below. 
+
+1. Association Rule Mining:
+
+Association Rules
+There are many ways to see the similarities between items. These are techniques that fall under the general umbrella of association. The outcome of this type of technique, in simple terms, is a set of rules that can be understood as "if this, then that"
+
+- When do we use Association Rule Mining while doing Market Basket Analysis?
+
+Simple and plain answer is When we are trying to find an association between different objects in our given datasets. For Model to do better we do need bigger sample of datasets. The more the size of datasets and more the frequency of the repeated items that occur. It is more likely to predict accurately. What we see in Market Basket Analysis while doing Clustering, retailing or Classification is applicaion of Association Rule Mining. All the Data Scientist or Data Analyst are trying to find is the association between different consumers what they are buying it together. Simple terms trying to see repeated chains by generating set of rules.
+
+Enough of Explaining Technical term. Lets take a real world grocery shopping example. If you go to any super market. If you have Bread, Milk, Flour in our basket then it is more likely to have Egg in our basket rather than a bottle of Shampoo.
+
+- How can Retailer benfit from these knowledge?
+
+By building up the Architecture of the store to keep the products close to each other or far apart. Sometimes we think why don't they have milk/ diary product right next to Egg . But as Store models they want you to spend more times they are kept far apart. One thing I have notice in Market Basket Grocery in couple places in Boston. As soon I enter the size of basket is hugely large. So that Pshycologically my goal is to fill by the time I walk out of grocery store. I am greated with Breakfast item like bagel, muffins, egg, bannana. I believe as we start our morning with these things. Pshycologically they are creating in back of my mind what products should I look when I fill my basket. Its all persusian that is built so that I spend more times looking for the things around in Chronological order. Most of the times we don't think all of these but these is how most of the times we are persuased and spend more than what we want.
+
+
+Data Scietiest/ Analyst cannot predict the future until and unless they have train themself with the past. In historical datasets all they are doing is finding the association chain rule between different objects in a set of transcation that we have made. All these transactional database can be used to train a model so that Model learns all these chains and predicts the likelyhood what the next person will buy if they bought product ABC and XYZ.
+
+Lets get little deeper to understand the componets of Market Basket Analysis.
+
+Lets say we have some datasets where we have two sets of item. They are A and B. To make it easy lets take our grocery example Milk => Bread [ Support= 30%, confidence=60% ] 
+
+So what does above code even mean?
+
+- It means that 30% historical transaction have shown that Bread is bought with purchase of a Milk
+- 60% of customers who purchase Milk have also bought with purchase of a Bread.
+
+Generally association rules are written in “IF-THEN” format. We can also use the term “antecedent” for IF and “Consequent” for THEN.Milk is refered as Antecedent and Bread over here will be refered as Consequent.
+
+# Key Term and Things to know:
+
+- Market Basket Analysis
+- Apriori algorithm
+- Association rule learning
+- support
+- confidence
+- lift and
+- conviction
+
+Some more terms people who have learnt Market Basket Analysis also have known :
+
+1. *Itemset* : Collection of one or more items. n-item-set means a set of n items.
+2. *Support Count* : Frequency of occurrence of an item-set.
+3. *Support* : Fraction of transactions that contain the item-set.
+
+We can measure the rule by measuring these two famous terms Support and Confidence. We can set for any datasets what would be our minimum support and what would be our minimum Confidence Tresholds.
+
+*Frequent Itemsets* : Item-sets whose support is greater or equal than minimum support threshold (min_sup).
+
+**Strong rules** If a rule A=>B[Support, Confidence] satisfies min_sup and min_confidence then it is a strong rule. **Good Models have strong rules.**
+
+**Lift** Lift gives the correlation between A and B in the rule A=>B. Correlation shows how one item-set A effects the item-set B. A and B are independent if: P(AUB)=P(A)P(B)  otherwise dependent.
+
+*Two Golden Rules of  Association Rule Mining*
+- Support greater than or equal to min_support
+- Confidence greater than or equal to min_confidence
+
+**Association Rule Mining is viewed as a two-step approach:**
+
+- **Frequent Itemset Generation** Find all frequent item-sets with support >= pre-determined min_support count
+
+- Rule Generation
+  - List all Association Rules from frequent item-sets. 
+  - Calculate Support and Confidence for all rules. 
+  - Prune rules that fail min_support and min_confidence thresholds.
+
+# Measuring rule importance by using support and confidence.
+
+Support and confidence are the two criteria to help us decide whether a pattern is "interesting". By setting thresholds for these two criteria, we can easily limit the number of interesting rules or item-sets reported.
+
+![](https://raw.githubusercontent.com/shahnp/Market-Basket-Analysis/master/Apriori_rules.png){width=60%}
+
+
+
+**Support** : 
+$$supp(X \Rightarrow Y)=\dfrac{|X \cup Y|}{n}$$
+
+For item-sets $X$ and $Y$, the `support` of an item-set measures how frequently it appears in the data:
+$$support(X)=\frac{count(X)}{N},$$
+
+**Confidence**: 
+$$conf(X \Rightarrow Y)=\dfrac{supp(X \cup Y)}{supp(X)}$$
+For a rule $X \rightarrow Y$, the `rule's confidence`  measures the relative accuracy of the rule:
+$$confidence(X \rightarrow Y)=\frac{support(X, Y)}{support(X)}$$
+
+*Things to remember* <br>
+**Higher the confidence , stronger the rule is.** <br>
+**As a general rule, Lift ratio of greater than one suggests some usefulness in the rule.**
+
+- Frequent Itemset Generation: Most Computionally Expensive, full database scan
+- Frequent item set: High frequency Item in Transcations
+- Support: Impact in terms of overall size.
+- Confidence: Operational usefulness of a rule, conditional probability that customer buy product A will also buy product B. 
+- Lift ratio : how efficient in the rule is in finding consequences, compared to random selection of transaction. Information about the change in probability of Item A in presence of Item B.
+
+- Lift > 1
+  - A lift greater than 1 indicates that the presence of A has increased the probability that the product B will occur on this transaction.
+
+- Lift < 1
+  - A lift smaller than 1 indicates that the presence of A has decreased the probability that the product B will occur on this transaction
+
+**Lift**:  The ratio of the observed support to that expected if X and Y were independent.
+
+$$lift(X \Rightarrow Y)=\dfrac{supp(X \cup Y)}{supp(X)supp(Y) }$$
+
+The first step of Apriori is to count up the number of occurrences, i.e., the support, of each member item separately. By scanning the database for the first time.
+
+Market Basket Analysis with XLMINER in Excel.After installing the XLMINER you should be able to find it as an Add-in in your MS Excel.
+
+**A Brief intro to XLMINER:**
+
+XLMINER is a Excel Add-in which can be used for performing data mining works like neural nets, classification, regression and much more.
+
+
+**Interpretation of the output:**
+
+- The item set should exceed minimum support determined based on the business need.
+- Should exceed the minimum confidence.
+- Should have greater Lift Ratio.
+- % increase of chance of buying other product(s) = (Lift - 1) * 100
+- A lift value of 1.25 implies that chance of buying product B (on the right hand side) would increase by 25%.
+
+
+Practical Application
+
+Lift indicates the strength of an association rule over the random co-occurrence of Item A and Item B, given their individual support.
+
+**Drawback of Confidence**
+
+- Confidence does not measure if the association between A and B is random or not. 
+- Whereas, Lift measures the strength of association between two items.
+
+```{r}
+```
+
+# Apriori & FP growth Algorithm.
+
+Mining association rules and frequent item sets allows for the discovery of interesting and useful connections or relationships between items.
+
+**The objectives of the study are the following:**
+
+Most of the Market Basket Analysis are done 
+  - to obtain association rules 
+  - analyze them for better decision support
+  - better understanding of data association
+  - increasing company profit using the Apriori Algorithm and FP-Growth Algorithm
+  - to analyze association rules based on relevance, interestingness, and correlation,
+  - Use lift, Imbalance Ratio (IR), and Kulczynski (Kulc) measure as correlation measures.
+
+<center>
+
+| Transaction   | Items                                       | 
+|:--------------|:--------------------------------------------|
+| T1            | {Milk, Egg, Bread}                          | 
+| T2            | {Milk, Coffee}                              |   
+| T3            | {Coffee, Butter}                            |  
+| T4            | {Milk, Egg, Coffee}                         | 
+| T5            | {Milk, Egg, Sugar, Coffee, Bread}           |   
+| T6            | {Egg, Sugar, Bread}                         |
+| T7            | {Egg, Bread, Sugar}                         | 
+
+</center>   
+
+$$I=\{i_1, i_2,i_3,..., i_n\}$$
+
+In our case it corresponds to:
+
+$$I=\{T\text- Milk, Egg, Bread, Coffee, Sugar, Butter\}$$
+
+```{r}
+```
+
+- Item set : No. of individaul items  in above each Transactions. [A-Z]
+
+    - $$I=\{T\text- Milk, Egg, Bread, Coffee, Sugar, Butter\}$$
+    
+- Transaction : Individual transaction happen every time. e.g [AB, DE, KJ, LOY, POK]
+  - Example:
+    - T1={Milk, Egg, Bread} 
+    
+- Association Rule : 
+    - X⇒Y , where X⊂I, Y⊂I and X∩Y=0
+    
+    - {T-Milk, Egg} ⇒ {Bread}
+    
+ - If combination of AB will Result to C, combination of something should result to something.
+ 
+- In Simple terms if we have to define support,it is nothing but an indication of how frequently the item set appears in the data set.
+  - number of transactions with both X and Y divided by the total number of transactions.
+  - not useful for low support values
+  
+- For a rule X⇒Y, confidence shows the percentage in which Y is bought with X. 
+- It’s an indication of how often the rule has been found to be true.
+-  For example, the rule Milk ⇒ Egg has a confidence of 3/4, which means that for 75% of the transactions containing a t-shirt the rule is correct (75% of the times a customer buys a t-shirt, trousers are bought as well)
+
+**Conviction** 
+$$conv(X \Rightarrow Y)=\dfrac{1-supp(Y)}{1-conf(X \Rightarrow Y) }$$
+
+- It can be interpreted as the ratio of the expected frequency that X occurs without Y if X and Y were independent divided by the observed frequency of incorrect predictions.
+- A high value means that the consequent depends strongly on the antecedent.
+
+A **transaction** is represented by the following expression:
+
+$$T=\{t_1, t_2,..., t_n\}$$
+
+Then, an **association rule** which is defined as an implication of the form:
+
+<center> $X \Rightarrow Y$, where $X \subset I$, $Y \subset I$ and $X \cap Y = 0$ </center>
+
+For example, 
+
+$$\{T\text- Milk, Egg\} \Rightarrow \{Bread\}$$
+
+# Loading Libraries
+```{r, warning= FALSE, message= FALSE}
+library(tidyverse) # helpful in Data Cleaning and Manipulation
+library(arules) # Mining Association Rules and Frequent Itemsets
+library(arulesViz) # Visualizing Association Rules and Frequent Itemsets 
+library(gridExtra) #  low-level functions to create graphical objects 
+library(ggthemes) # For cool themes like fivethirtyEight
+library(dplyr) # Data Manipulation
+library(readxl)# Read Excel Files in R
+library(plyr)# Tools for Splitting, Applying and Combining Data
+library(ggplot2) # Create graphics and charts
+library(knitr) # Dynamic Report generation in R
+library(lubridate) # Easier to work with dates and times.
+library(kableExtra) # construct complex tables and customize styles
+library(RColorBrewer) # Color schemes for plotting
+```
+
+
+# Information about Datasets:
+
+Implementing MBA/Association Rule Mining using R
+
+In this project, we will use a dataset from the UCI Machine Learning Repository. The dataset is called Online-Retail, and we can download it from [here](http://archive.ics.uci.edu/ml/datasets/online+retail). 
+
+- The dataset contains transaction data from 01/12/2010 to 09/12/2011 for a UK-based registered non-store online retail.
+
+# Data Preparation
+
+```{r message=FALSE, warning=FALSE}
+#read excel into R dataframe
+retail <- read_excel('~/Desktop/R_markdown/Market_Basket_Analysis/Online Retail.xlsx')
+retail <- retail[complete.cases(retail), ] # will clean up the non missing values.
+```
+
+Let’s get an idea of what we’re working with.
+
+```{r}
+glimpse(retail)
+```
+
+Dataset Description
+-  Number of Rows: 406,829
+-  Number of Attributes: 8
+
+**Attribute Information:** 
+
+* InvoiceNo: Invoice number, Nominal,6-digit unique transcation number. 'c'- cancellation. 
+* StockCode: Product (item) code, Nominal, 5-digit distinct product Number.
+* Description: Description about Product Name, Nominal.
+* Quantity: The quantities of each product (item) per transaction, Numeric.
+* InvoiceDate: Invoice Date and time, Numeric
+* UnitPrice: Unit price,Numeric, Product price per unit in pound sterling not to be confused with Dollar.
+* CustomerID: Customer number,Nominal, a 5-digit integral number uniquely assigned to each customer.
+* Country: Country name,Nominal, the name of the country where each customer resides.
+           
+# Data Cleaning: 
+
+First step lets clean up the class variables for the datasets.
+
+```{r,message= FALSE, warning=FALSE}
+retail$Description <- as.factor(retail$Description)
+retail$Country <- retail$Country
+retail$Date <- as.Date(retail$InvoiceDate)
+retail$InvoiceNo <- as.numeric(as.character(retail$InvoiceNo)) 
+retail$Time <- format(retail$InvoiceDate,"%H:%M:%S")
+```
+
+
+```{r}
+#ddply(dataframe, variables_to_be_used_to_split_data_frame, function_to_be_applied)
+transaction_data <- ddply(retail,c("InvoiceNo","Date"),
+                       function(df1)paste(df1$Description,
+                       collapse = ","))
+# paste() concatenates vectors to character and separated results using collapse=[any optional charcater string ]. Here ',' is used
+```
+
+```{r}
+## Remove redundancies
+transaction_data$InvoiceNo <- NULL # set column InvoiceNo of dataframe transactionData  
+transaction_data$Date <- NULL # set column Date of dataframe transactionData
+colnames(transaction_data) <- c("items") # Rename column to items
+``` 
+
+# Write CSV 
+*SAVE THE FILE AS OUTPUT*
+
+```{r}
+write.csv(transaction_data,'~/Desktop/R_markdown/Market_Basket_Analysis/market_basket_transactions.csv', quote = FALSE, row.names = TRUE)
+# Quote : TRUE "character or factor column with double quotes."
+# Quote : FALSE nothing will be quoted
+# row.names : either a logical value indicating whether the row names of x are to be written along with x, or a character vector of row names to be written.
+```
+
+
+
+Transaction data file which is in basket format let's convert it into an object of the transaction class.
+
+```{r, warning= FALSE, message= FALSE}
+# Will get lots of EOF within quoted string in your output
+tr <- read.transactions('~/Desktop/R_markdown/Market_Basket_Analysis/market_basket_transactions.csv', format = 'basket', sep=',')
+# sep tell how items are separated.
+```
+
+transactions as itemMatrix in sparse format with <br>
+ 18839 rows (elements/itemsets/transactions) and <br>
+ 26725 columns (items) and a density of 0.0007046267  <br>
+
+# Summary
+
+```{r}
+summary(tr)
+```
+
+# Frequency plot of top 10 Items:
+
+```{r}
+top_items<-retail %>%
+  dplyr::group_by(Description) %>%
+  dplyr::summarise(count=n()) %>%
+  dplyr::arrange(desc(count))
+
+summary(retail)
+top_items<-head(top_items,10)
+
+ggplot(top_items,aes(x=reorder(Description,count), y=count))+
+  geom_bar(stat="identity",fill="cadetblue")+
+  coord_flip()+
+  scale_y_continuous(limits = c(0,3000))+
+  ggtitle("Frequency plot of top 10 Items")+
+  xlab("Description of item")+
+  ylab("Count")+
+  theme_fivethirtyeight()
+```
+
+* Lets Plot Item Frequency Bar Plot to view distribution.
+
+We can plot either Relative or Absolute Values.
+  - Absolute: plot numeric frequencies of each item independently
+  - Relative: how many times these items have appeared as compared to others.
+```{r}
+itemFrequencyPlot(tr,topN=10,type="absolute",col=brewer.pal(8,'Pastel2'), main="Top 10 Absolute Item Frequency Plot", horiz = TRUE)
+```
+
+```{r}
+itemFrequencyPlot(tr,topN=10,type="relative",col=brewer.pal(8,'Pastel2'),main="Top 10 Relative Item Frequency Plot", horiz = TRUE)
+```
+
+
+$\color{red}{\text{`WHITE HANGING HEART T-LIGHT HOLDER` and `REGENCY CAKESTAND 3 TIER`}}$, 
+
+This plot shows that `WHITE HANGING HEART T-LIGHT HOLDER` and `REGENCY CAKESTAND 3 TIER` have the most sales. U can see at the bottom two of the chart.So to increase the sale of `SET OF 3 CAKE TINS PANTRY DESIGN` the retailer can put it near `REGENCY CAKESTAND 3 TIER`.
+
+Next we will mine the rules using the APRIORI algorithm. The function apriori() is from package arules.
+
+```{r}
+# Parameter Spec: min_sup=0.001, min_confidence=0.8 values with 10 items max items in rule.
+association_rules <- apriori(tr, parameter = list(supp=0.001, conf=0.8,maxlen=10))
+```
+
+- minval: minimum value of the support an itemset should satisfy to be a part of a rule.
+- smax: maximum support value for an itemset.
+- AREM(Additional Rule Evaluation Parameter): constrained the number of rules using Support & Confidence. There are several other ways to constrain the rules
+- AVAL: logical indicating whether to return the additional rule evaluation measure selected with arem.
+- originalSupport: The traditional support value only considers both LHS and RHS items for calculating support. If you want to use only the LHS items for the calculation then you need to set this to FALSE.
+- maxtime : maximum amount of time allowed to check for subsets.
+- minlen : minimum number of items required in the rule.
+- maxlen : maximum number of items that can be present in the rule.
+
+- The apriori will take tr as the transaction object on which mining is to be applied. 
+- Parameter will allow you to set min_sup and min_confidence. 
+- The default values:
+   - minimum support of 0.1, the minimum confidence of 0.8, maximum of 10 items (maxlen).
+
+```{r, warning= FALSE, message= FALSE}
+summary(association_rules) #shows the following:
+```
+
+- Total number of rules: The set of 116493 rules
+- Distribution of rule length: 
+  - A length of 6 items has the most rules: 39875 &  
+  - length of 2 items have the lowest number of rules: 111
+
+- Summary of Quality measures: 
+Min and max values for Support, Confidence and, Lift.
+
+- Information used for creating rules: The data, support, and confidence we provided to the algorithm.
+
+Since there are 116493 rules, let's print only top 10:
+
+```{r, warning= FALSE, message= FALSE}
+inspectDT(head(sort(association_rules, by = "confidence"), 3))
+```
+
+Limiting the number and size of rules.
+
+- If we want stronger rules, you can increase the value of conf and for more extended rules give higher value to maxlen.
+
+```{r, warning= FALSE, message= FALSE}
+shorter_association_rules <- apriori(tr, parameter = list(supp=0.001, conf=0.8,maxlen=3))
+```
+
+Removing redundant rules
+You can remove rules that are subsets of larger rules. 
+```{r, warning= FALSE, message= FALSE}
+# Use the code below to remove such rules:
+subset_rules <- which(colSums(is.subset(association_rules, association_rules)) > 1) # get subset rules in vector
+length(subset_rules)  #> 107755
+```
+
+```{r, warning= FALSE, message= FALSE}
+subset_association_rules <- association_rules[-subset_rules] # remove subset rules.
+```
+
+- which() returns the position of elements in the vector for which value is TRUE.
+- colSums() forms a row and column sums for dataframes and numeric arrays.
+- is.subset() Determines if elements of one vector contain all the elements of other
+- Appearance gives us options to set LHS (IF part) and RHS (THEN part) of the rule.
+
+
+Sometimes, we want to work on a specific product. If we want to find out what causes influence on the purchase of item X we can use appearance option in the apriori command. 
+
+For example, to find what customers buy before buying 'METAL'. Lets look into that.
+
+```{r, warning= FALSE, message= FALSE}
+metal.association.rules <- apriori(tr, parameter = list(supp=0.001, conf=0.8),appearance = list(default="lhs",rhs="METAL"))
+```
+
+```{r, warning= FALSE, message= FALSE}
+# Here lhs=METAL because you want to find out the probability of that in how many customers buy METAL along with other items
+inspectDT(head(metal.association.rules))
+```
+
+Similarly, to find the answer to the question Customers who bought METAL also bought.... we will keep METAL on lhs:
+
+```{r, warning= FALSE, message= FALSE}
+metal.association.rules <- apriori(tr, parameter = list(supp=0.001, conf=0.8),appearance = list(lhs="METAL",default="rhs"))
+```
+
+```{r, warning= FALSE, message= FALSE}
+# Here lhs=METAL because you want to find out the probability of that in how many customers buy METAL along with other items
+inspectDT(head(metal.association.rules))
+```
+
+# Vizulatization
+
+Some of the Vizualization Option:<br>
+
+  -  Scatter-Plot
+  -  Interactive Scatter-plot
+  -  Individual Rule Representation
+  -  Scatter-Plot :
+      - straight-forward visualization of association rules
+      - uses Support and Confidence on the axes.
+      - Lift is used by default to color (grey levels) of the points.
+    
+  
+## Scatterplot
+```{r, warning= FALSE, message= FALSE}
+# Filter rules with confidence greater than 0.4 or 40%
+subRules<-association_rules[quality(association_rules)$confidence>0.4]
+#Plot SubRules
+plot(subRules)
+```
+
+The above plot shows that rules with high lift have low support. 
+We can use the following options for the plot:
+plot(rulesObject, measure, shading, method)
+
+- rulesObject: the rules object to be plotted
+- measure: Measures for rule interestingness. 
+    - Can be Support, Confidence, lift or combination of these depending upon method value.
+- shading: Measure used to color points (Support, Confidence, lift). The default is Lift.
+- method: Visualization method to be used (scatterplot, two-key plot, matrix3D).
+
+## The two-key plot
+
+- uses support and confidence on x and y-axis respectively.
+- uses order for coloring. The order is the number of items in the rule.
+
+```{r warning= FALSE, message= FALSE}
+plot(subRules,method="two-key plot")
+```
+
+
+
+Interactive Scatter-Plot : Plotly
+```{r, warning= FALSE, message= FALSE}
+plotly_arules(subRules)
+```
+
+## Graph-Based Visualizations
+
+Graph-based techniques visualize association rules using vertices and edges 
+- Vertices are labeled with item names, and item sets or rules are represented as a second set of vertices. Items are connected with item-sets/rules using directed arrows. 
+- Arrows pointing from items to rule vertices indicate LHS items and an arrow from a rule to an item indicates the RHS. 
+- The size and color of vertices often represent interest measures.
+
+```{r, warning= FALSE, message= FALSE}
+#10 rules from subRules having the highest confidence.
+top10subRules <- head(subRules, n = 10, by = "confidence")
+```
+
+```{r, warning= FALSE, message= FALSE}
+plot(top10subRules, method = "graph",  engine = "htmlwidget") #interactive plot engine=htmlwidget
+```
+
+From arulesViz graphs for sets of association rules can be exported in the GraphML format or as a Graphviz dot-file to be explored in tools like Gephi. For example, the 1000 rules with the highest lift are exported by:
+
+```{r, warning= FALSE, message= FALSE}
+saveAsGraph(head(subRules, n = 1000, by = "lift"), file = "rules.graphml")
+```
+
+## Individual Rule Representation
+
+- also called as Parallel Coordinates Plot.
+- Useful to visualized which products along with which items cause what kind of sales.
+
+As mentioned above, the RHS is the Consequent or the item we propose the customer will buy; the positions are in the LHS where 2 is the most recent addition to our basket and 1 is the item we previously had.
+
+```{r, warning= FALSE, message= FALSE}
+subRules2<-head(subRules, n=10, by="lift")
+plot(subRules2, method="paracoord")
+```
+
+# Transactions per month
+
+```{r, fig.align='center'}
+# Transactions per month
+retail %>%
+  mutate(Month=as.factor(month(Date))) %>%
+  group_by(Month) %>%
+  dplyr::summarize(Description=n_distinct(Description)) %>% 
+  ggplot(aes(x=Month, y=Description)) +
+  geom_bar(stat="identity", fill="#FF69B4", show.legend=FALSE) +
+  geom_label(aes(label=Description, y= 1, fontface = 'bold')) +
+  labs(title="Description per month") +
+  theme_fivethirtyeight()+
+  coord_flip()
+```
+
+# Transactions per weekday
+
+```{r, fig.align='center'}
+# Description per weekday
+retail %>%
+  mutate(WeekDay=as.factor(weekdays(as.Date(Date)))) %>%
+  group_by(WeekDay) %>%
+  dplyr::summarize(Description=n_distinct(Description)) %>%
+  ggplot(aes(x=WeekDay, y=Description)) +
+  geom_bar(stat="identity", fill="dodgerblue", show.legend=FALSE) +
+  geom_label(aes(label=Description, y =1, fontface = 'bold')) +
+  labs(title="Description per weekday") +
+  scale_x_discrete(limits=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")) +
+  theme_fivethirtyeight()+
+  coord_flip()
+```
+
+
+```{r}
+parsed <- parse_date_time(retail$InvoiceDate, orders = "ymd HMS")
+retail$date <- as.character(as_date(parsed))
+retail$time <- format(parsed, "%H:%M:%S")
+```
+
+# Transactions per hour 
+
+```{r}
+ggplot(retail,aes(x=time))+
+  geom_bar(fill="skyblue")+
+  ggtitle("Transcations across the day")+
+  xlab("Time")+
+  ylab("No. of transactions")
+```
+
+```{r fig.align='center'}
+# Transactions per hour
+retail %>%
+  mutate(Hour=as.factor(hour(hms(time)))) %>%
+  group_by(Hour) %>%
+  dplyr::summarize(Description=n_distinct(Description)) %>%
+  ggplot(aes(x=Hour, y=Description)) +
+  geom_bar(stat="identity", fill="steelblue1", show.legend=FALSE) +
+  geom_label(aes(label=Description)) +
+  labs(title="Description per hour") +
+  theme_fivethirtyeight()
+```
+
+# No. of transactions with different basket sizes
+
+```{r}
+retail$Country<-as.factor(retail$Country)
+#retail$Time<-as.factor(retail$Time)
+retail$month<-format(retail$Date,"%m")
+```
+
+
+```{r}
+items<-retail %>%
+  dplyr::group_by(InvoiceNo) %>%
+  dplyr::summarise(total=n())
+
+ggplot(items,aes(x=total))+
+  geom_histogram(fill="indianred", binwidth = 1)+
+  geom_rug()+
+  coord_cartesian(xlim=c(0,80))+
+  ggtitle("No. of transactions with different basket sizes")+
+  xlab("Basket size")+
+  ylab("No of transactions ")
+```
+
+```{r}
+retail_sorted <- retail[order(retail$CustomerID),]
+library(plyr)
+itemList <- ddply(retail,c("CustomerID","Date"), 
+                  function(df1)paste(df1$Description, 
+                                     collapse = ","))
+
+itemList$CustomerID <- NULL
+itemList$Date <- NULL
+colnames(itemList) <- c("items")
+```
+
+
+```{r}
+write.csv(itemList,"market_basket.csv", quote = FALSE, row.names = TRUE)
+```
+
+
+# Overall quick Snapshot
+
+We Started these projects with question What does the Marketer want? Followed by intrdoucing MBA model, Association Rule Minning. Then we define the key terminology and how can we find out if there is any strong relationship between the variables by looking 
+
+- Higher Confidence Value
+- Lift Ratio > 1
+- Should Exceed Minimum Support and Minimum Confidence.
+- 3 Key Terms to take away : Support, confidence, Lift
+
+
+The first step in order to create a set of association rules is to determine the optimal thresholds for support and confidence. If we set these values too low, then the algorithm will take longer to execute and we will get a lot of rules (most of them will not be useful). 
+We can try different values of support and confidence and see graphically how many rules are generated for each combination.
+
+As we can see, Saturday is the bussiness is closed as we don't have any transcation day. Rest of the day it does do averge business. The business pickups around 10 AM to 4 PM.There’s not much to discuss with this visualization. The results are logical and expected.
